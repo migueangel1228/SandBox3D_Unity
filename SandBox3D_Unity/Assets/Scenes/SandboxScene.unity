@@ -220,7 +220,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -140}
+  m_AnchoredPosition: {x: 0, y: -128}
   m_SizeDelta: {x: 350, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &101974425
@@ -874,6 +874,8 @@ MonoBehaviour:
   launchPoint: {fileID: 528518032}
   speedSlider: {fileID: 838466672}
   speedValueText: {fileID: 101974425}
+  angleSlider: {fileID: 955913281}
+  angleValueText: {fileID: 908204587}
   initialSpeed: 10
   launchAngle: 45
   projectileMass: 1
@@ -1110,7 +1112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -370, y: -130}
+  m_AnchoredPosition: {x: -351, y: -130}
   m_SizeDelta: {x: 300, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &838466672
@@ -1630,7 +1632,7 @@ Transform:
   m_GameObject: {fileID: 1172278514}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.95, y: -2.8, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []

@@ -8,25 +8,34 @@ public class LaunchController : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform launchPoint;
 
-    [Header("Interfaz")]
+    [Header("Interfaz - velocidad")]
     public Slider speedSlider;
     public TMP_Text speedValueText;
 
+    [Header("Interfaz - ángulo")]
+    public Slider angleSlider;
+    public TMP_Text angleValueText;
+
     [Header("Parámetros del lanzamiento")]
     public float initialSpeed = 10f;
-    public float launchAngle = 45f;
+    public float launchAngle = 45f; // En grados
     public float projectileMass = 1f;
 
     private GameObject currentProjectile;
 
     void Start()
     {
-        UpdateSpeedFromUI();
+        // Sincronizar sliders con los valores iniciales (Inspector)
+        SyncUIFromValues();
+
+        // Asegurar que los textos se actualicen al inicio
+        UpdateValuesFromUI();
     }
 
     void Update()
     {
-        UpdateSpeedFromUI();
+        // Leer sliders y actualizar textos cada frame (simple y suficiente para el MVP)
+        UpdateValuesFromUI();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -34,8 +43,22 @@ public class LaunchController : MonoBehaviour
         }
     }
 
-    private void UpdateSpeedFromUI()
+    private void SyncUIFromValues()
     {
+        if (speedSlider != null)
+        {
+            speedSlider.value = initialSpeed;
+        }
+
+        if (angleSlider != null)
+        {
+            angleSlider.value = launchAngle;
+        }
+    }
+
+    private void UpdateValuesFromUI()
+    {
+        // Velocidad
         if (speedSlider != null)
         {
             initialSpeed = speedSlider.value;
@@ -44,6 +67,17 @@ public class LaunchController : MonoBehaviour
         if (speedValueText != null)
         {
             speedValueText.text = "Velocidad: " + initialSpeed.ToString("F1") + " m/s";
+        }
+
+        // Ángulo
+        if (angleSlider != null)
+        {
+            launchAngle = angleSlider.value;
+        }
+
+        if (angleValueText != null)
+        {
+            angleValueText.text = "Ángulo: " + launchAngle.ToString("F1") + "°";
         }
     }
 
@@ -82,8 +116,10 @@ public class LaunchController : MonoBehaviour
 
         rb.mass = projectileMass;
 
+        // Convertir ángulo a radianes
         float angleInRadians = launchAngle * Mathf.Deg2Rad;
 
+        // Dirección de lanzamiento en el plano X-Y (Z = 0 por ahora)
         Vector3 launchDirection = new Vector3(
             Mathf.Cos(angleInRadians),
             Mathf.Sin(angleInRadians),
@@ -92,6 +128,8 @@ public class LaunchController : MonoBehaviour
 
         Vector3 initialVelocity = launchDirection * initialSpeed;
 
+        // En versiones recientes de Unity puedes usar linearVelocity; si da error, usa rb.velocity en su lugar
         rb.linearVelocity = initialVelocity;
+        // rb.velocity = initialVelocity; // Alternativa si linearVelocity no existe en tu versión
     }
 }

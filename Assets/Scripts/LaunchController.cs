@@ -71,8 +71,20 @@ public class LaunchController : MonoBehaviour
 
     public void ResetScene()
     {
-        GameObject[] projectiles = GameObject.FindGameObjectsWithTag("Projectile");
-        foreach (GameObject p in projectiles)
-            Destroy(p);
+        // Buscar por nombre en vez de tag
+        GameObject[] todos = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        foreach (GameObject obj in todos)
+        {
+            if (obj.name.Contains("Sphere") || obj.name.Contains("sphere"))
+                Destroy(obj);
+        }
+
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+
+        if (physicsTracker != null)
+            physicsTracker.Reset();
+
+        Debug.Log("Escena reseteada");
     }
 }

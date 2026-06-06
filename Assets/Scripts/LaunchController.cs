@@ -17,18 +17,25 @@ public class LaunchController : MonoBehaviour
     public TMPro.TextMeshProUGUI angleText;
     public TMPro.TextMeshProUGUI massText;
 
+    [Header("Slider de viento")]
+    public Slider windSlider;
+    public TMPro.TextMeshProUGUI windText;
+
     [Header("Referencias")]
     public PhysicsDataTracker physicsTracker;
     public EquationDisplay equationDisplay;
+    public ForceManager forceManager;
 
     void Update()
     {
         if (speedText != null)
             speedText.text = "Velocidad: " + speedSlider.value.ToString("F1") + " m/s";
         if (angleText != null)
-            angleText.text = "Ángulo: " + angleSlider.value.ToString("F1") + "°";
+            angleText.text = "Angulo: " + angleSlider.value.ToString("F1") + "°";
         if (massText != null)
             massText.text = "Masa: " + massSlider.value.ToString("F2") + " kg";
+        if (windText != null && windSlider != null)
+            windText.text = "Viento: " + windSlider.value.ToString("F1") + " m/s";
 
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
             Launch();
@@ -38,7 +45,7 @@ public class LaunchController : MonoBehaviour
     {
         float speed = speedSlider.value;
         float angle = angleSlider.value;
-        float mass = massSlider.value;
+        float mass  = massSlider.value;
 
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -58,20 +65,20 @@ public class LaunchController : MonoBehaviour
 
         rb.linearVelocity = velocity;
 
-        // Notificar al tracker de física
         if (physicsTracker != null)
             physicsTracker.SetProjectile(projectile);
 
-        // Notificar al display de ecuaciones con los datos reales
         if (equationDisplay != null)
             equationDisplay.SetLaunchData(transform.position, velocity, mass);
+
+        if (forceManager != null)
+            forceManager.SetProjectile(projectile);
 
         Debug.Log($"Lanzado | v={speed} m/s | θ={angle}° | m={mass} kg");
     }
 
     public void ResetScene()
     {
-        // Buscar por nombre en vez de tag
         GameObject[] todos = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         foreach (GameObject obj in todos)
         {
@@ -82,8 +89,8 @@ public class LaunchController : MonoBehaviour
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
 
-        if (physicsTracker != null)
-            physicsTracker.Reset();
+        if (physicsTracker != null) physicsTracker.Reset();
+        if (forceManager != null)   forceManager.Reset();
 
         Debug.Log("Escena reseteada");
     }

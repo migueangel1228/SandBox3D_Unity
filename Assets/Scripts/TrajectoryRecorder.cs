@@ -9,6 +9,9 @@ public class TrajectoryRecorder : MonoBehaviour
     public float lineWidth = 0.05f;
     public float recordInterval = 0.02f; // cada cuántos segundos guarda un punto
 
+    [Header("Juice")]
+    public GameObject impactParticlePrefab;
+
     private LineRenderer lineRenderer;
     private List<Vector3> points = new List<Vector3>();
     private float timer = 0f;
@@ -62,6 +65,11 @@ public class TrajectoryRecorder : MonoBehaviour
             points.Add(transform.position); // punto final exacto
             UpdateLine();
             recording = false;
+
+            if (impactParticlePrefab != null)
+            {
+                Instantiate(impactParticlePrefab, transform.position, Quaternion.identity);
+            }
         }
     }
 }

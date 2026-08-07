@@ -12,6 +12,16 @@ public class EquationDisplay : MonoBehaviour
     private float x0, y0, z0;
     private bool lanzado = false;
 
+    void OnEnable()
+    {
+        LaunchController.OnProjectileLaunched += ManejarLanzamiento;
+    }
+
+    void OnDisable()
+    {
+        LaunchController.OnProjectileLaunched -= ManejarLanzamiento;
+    }
+
     void Update()
     {
         if (textVectorial != null)
@@ -27,9 +37,12 @@ public class EquationDisplay : MonoBehaviour
             textValores.text = "[ Configura y lanza para ver los valores reales ]";
     }
 
-    public void SetLaunchData(Vector3 position, Vector3 velocity, float m)
+    void ManejarLanzamiento(GameObject projectile, Vector3 velocity, float m)
     {
-        x0 = position.x; y0 = position.y; z0 = position.z;
+        x0 = projectile.transform.position.x; 
+        y0 = projectile.transform.position.y; 
+        z0 = projectile.transform.position.z;
+        
         v0x = velocity.x; v0y = velocity.y; v0z = velocity.z;
         lanzado = true;
         ActualizarEcuacionValores();

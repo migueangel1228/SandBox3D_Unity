@@ -267,3 +267,4 @@ MonoBehaviour:
   lineColor: {r: 0, g: 1, b: 1, a: 1}
   lineWidth: 0.05
   recordInterval: 0.02
+  impactParticlePrefab: {fileID: 1388524946666796791, guid: d5115543a82340a4689569b747a13756, type: 3}

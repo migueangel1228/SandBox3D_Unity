@@ -1,9 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System;
 
 public class LaunchController : MonoBehaviour
 {
+    public static event Action<GameObject, Vector3, float> OnProjectileLaunched;
+    public static event Action OnSceneReset;
+
     [Header("Prefab del proyectil")]
     public GameObject projectilePrefab;
 
@@ -21,12 +25,16 @@ public class LaunchController : MonoBehaviour
     public Slider windSlider;
     public TMPro.TextMeshProUGUI windText;
 
-    [Header("Referencias")]
-    public PhysicsDataTracker physicsTracker;
-    public EquationDisplay equationDisplay;
-    public ForceManager forceManager;
+    void Start()
+    {
+        if (speedSlider != null) speedSlider.onValueChanged.AddListener(UpdateUITexts);
+        if (angleSlider != null) angleSlider.onValueChanged.AddListener(UpdateUITexts);
+        if (massSlider != null) massSlider.onValueChanged.AddListener(UpdateUITexts);
+        if (windSlider != null) windSlider.onValueChanged.AddListener(UpdateUITexts);
+        UpdateUITexts(0);
+    }
 
-    void Update()
+    void UpdateUITexts(float _)
     {
         if (speedText != null)
             speedText.text = "Velocidad: " + speedSlider.value.ToString("F1") + " m/s";
@@ -36,7 +44,10 @@ public class LaunchController : MonoBehaviour
             massText.text = "Masa: " + massSlider.value.ToString("F2") + " kg";
         if (windText != null && windSlider != null)
             windText.text = "Viento: " + windSlider.value.ToString("F1") + " m/s";
+    }
 
+    void Update()
+    {
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
             Launch();
     }
@@ -65,14 +76,7 @@ public class LaunchController : MonoBehaviour
 
         rb.linearVelocity = velocity;
 
-        if (physicsTracker != null)
-            physicsTracker.SetProjectile(projectile);
-
-        if (equationDisplay != null)
-            equationDisplay.SetLaunchData(transform.position, velocity, mass);
-
-        if (forceManager != null)
-            forceManager.SetProjectile(projectile);
+        OnProjectileLaunched?.Invoke(projectile, velocity, mass);
 
         Debug.Log($"Lanzado | v={speed} m/s | θ={angle}° | m={mass} kg");
     }
@@ -89,8 +93,7 @@ public class LaunchController : MonoBehaviour
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
 
-        if (physicsTracker != null) physicsTracker.Reset();
-        if (forceManager != null)   forceManager.Reset();
+        OnSceneReset?.Invoke();
 
         Debug.Log("Escena reseteada");
     }

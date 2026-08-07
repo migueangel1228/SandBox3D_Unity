@@ -12,6 +12,18 @@ public class ForceManager : MonoBehaviour
 
     private Rigidbody rb;
 
+    void OnEnable()
+    {
+        LaunchController.OnProjectileLaunched += ManejarLanzamiento;
+        LaunchController.OnSceneReset += Reset;
+    }
+
+    void OnDisable()
+    {
+        LaunchController.OnProjectileLaunched -= ManejarLanzamiento;
+        LaunchController.OnSceneReset -= Reset;
+    }
+
     void FixedUpdate()
     {
         // Solo aplicar si hay proyectil activo con Rigidbody
@@ -41,8 +53,7 @@ public class ForceManager : MonoBehaviour
         }
     }
 
-    // Llamado desde LaunchController al lanzar
-    public void SetProjectile(GameObject projectile)
+    void ManejarLanzamiento(GameObject projectile, Vector3 velocity, float mass)
     {
         activeProjectile = projectile;
         rb = null; // resetear para que FixedUpdate lo obtenga fresco
